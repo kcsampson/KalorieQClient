@@ -1,0 +1,25 @@
+<ion-view view-title="Edit Meal"  cache-view="false" id="tab-kqeditmeal">
+
+	<ion-content ng-controller="kqeditmeal" class="padding">
+
+	<label class="item item-input">
+	  <input ng-model="foodpic.asserted_cals" type="text" placeholder="Your estimate">
+	</label> 
+	
+	<label class="item item-input">
+	  <input ng-model="foodpic.descript" type="text" placeholder="Description">
+	</label>
+	
+	<ionic-datepicker date="currentDate" min="minDate" max="maxDate" callback="consumedDatePickerCallback">
+				<button class="button button-block button-positive"> {{ currentDate | date:'MMMM/dd/yyyy' }} </button>
+	</ionic-datepicker>
+	
+			
+	<button  ng-click="mealSave()" class="button button-block button-positive">Submit</button>	
+		
+
+	 <img style="max-width: 100%;" ng-src="http://www.kalorieq.com/kalorieq.php5?action=getimage&imageid={{foodpic.kalorieqid}}">
+	</ion-content>
+
+</ion-view>
+	

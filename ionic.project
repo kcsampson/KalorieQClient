@@ -1,0 +1,5 @@
+{
+  "name": "kalorieq",
+  "app_id": ""
+   , "proxies": [ { "path": "/kalorieq",  "proxyUrl": "http://www.kalorieq.com/kalorieq.php5" }]
+}

@@ -1,0 +1,20 @@
+ <ion-view view-title="My KalorieQ"  cache-view="false" id="tab-mykalorieq">
+ 
+	<ion-content ng-controller="mykalorieq" class="padding">
+		<ionic-datepicker date="currentDate" min="minDate" max="maxDate" callback="datePickerCallback">
+			<button class="button button-block button-positive"> {{ currentDate | date:'MMMM/dd/yyyy' }} </button>
+		</ionic-datepicker>
+		
+	
+		 <ion-list>
+			  <ion-item ng-repeat="foodpic in foodpics" ng-click="clickFoodPic(foodpic)">
+			  <img ng-src="data:image/jpeg; base64,{{ foodpic.imagethumb }}">
+			   Id:{{foodpic.kalorieqid}} Descript:{{ foodpic.descript }} Type: {{foodpic.recordtype}}
+			   
+			   {{foodpic.userid}}
+			 </ion-item>
+		 </ion-list>
+		<button  ng-click="takePhoto()" class="button button-block button-positive">New Picture</button>
+	</ion-content>
+</ion-view>
+

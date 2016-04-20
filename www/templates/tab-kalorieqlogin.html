@@ -1,0 +1,17 @@
+	 <ion-view view-title="KalorieQ Login/Signup"  cache-view="false" id="tab-login">
+	<ion-content ng-controller="kqmain" overflow-scroll="true" padding="true" class="has-header">
+	
+		<h3>Login / Signup</h3>
+		<h4>{{kqstatus}}</h4>
+		<label class="item item-input">
+		  <input ng-model="data.userName" type="text" placeholder="User Name">
+		</label>
+		
+		<label class="item item-input">
+		  <input ng-model="data.userPassword" type="password" placeholder="Password">
+		</label>
+		
+		<button  ng-click="login()" class="button button-block button-positive">Submit</button>
+    </ion-content>
+	</ion-view>
+	

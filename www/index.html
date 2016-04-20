@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<!-- Allow requests to foo.com -->
+<meta http-equiv="Content-Security-Policy" 
+content="script-src * 'self' 'unsafe-inline';default-src * 'self' 'unsafe-inline';img-src data: http://www.kalorieq.com 'self' 'unsafe-inline'">   
+ <meta name="viewport" 
+ content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+ 
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+	
+   <script src="lib/jquery/jquery-1.12.2.min.js"></script>
+   
+	<script src="lib/abdmob/x2js/xml2json.js"></script>
+    <!-- your app's js -->
+    <script src="js/appNew.js"></script>
+
+	<!-- Ionic Datepicker -->
+	<link href="lib/datepicker-for-ionic/dist/style.css" rel="stylesheet"> 
+	<script src="lib/datepicker-for-ionic/dist/templates.min.js"></script>
+	<script src="lib/datepicker-for-ionic/dist/ionic-datepicker.min.js"></script>
+	
+  </head>
+  <body ng-app="kalorieq" >  
+  <div><div>
+  <ion-nav-bar class="bar-positive">
+ <ion-nav-back-button class="button-icon icon ion-ios-arrow-back">Back</ion-nav-back-button>
+ </ion-nav-bar>
+<ion-nav-view></ion-nav-view>
+</div></div>
+<script id="templates/tabs.html" type="text/ng-template">
+ <ion-tabs class="tabs-positive tabs-icon-top">
+ <!-- Dashboard Tab -->
+ <ion-tab title="Login" icon-off="ion-ios-pulse" icon-on="ion-ios-pulse-strong" href="#/tab/login">
+   <ion-nav-view name="tab-login"></ion-nav-view>
+ </ion-tab>
+ <ion-tab title="My KalorieQ" icon-off="ion-ios-pulse" icon-on="ion-ios-pulse-strong" href="#/tab/mykalorieq">
+   <ion-nav-view name="tab-mykalorieq"></ion-nav-view>
+ </ion-tab>
+ <ion-tab title="Favorites" icon-off="ion-ios-pulse" icon-on="ion-ios-pulse-strong" href="#/tab/favorites">
+   <ion-nav-view name="tab-favorites"></ion-nav-view>
+ </ion-tab>
+
+ <!-- Chats Tab -->
+ <ion-tab title="Chats" icon-off="ion-ios-chatboxes-outline" icon-on="ion-ios-chatboxes" href="#/tab/chats">
+   <ion-nav-view name="tab-chats"></ion-nav-view>
+ </ion-tab>
+
+ <!-- Account Tab -->
+ <ion-tab title="Account" icon-off="ion-ios-gear-outline" icon-on="ion-ios-gear" href="#/tab/account">
+   <ion-nav-view name="tab-account"></ion-nav-view>
+ </ion-tab>
+ </ion-tabs>
+</script>
+
+<script id="templates/tab-login.html" type="text/ng-template">
+ <ion-view title="Login">
+	<ion-content  class="padding">
+	
+		<h3>Login / Signup</h3>
+		<h4>{{kqstatus}}</h4>
+		<label class="item item-input">
+		  <input ng-model="data.userName" type="text" placeholder="User Name">
+		</label>
+		
+		<label class="item item-input">
+		  <input ng-model="data.userPassword" type="password" placeholder="Password">
+		</label>
+		
+		<button  ng-click="login()" class="button button-block button-positive">Submit</button>
+    </ion-content>
+ </ion-view>
+</script> 
+
+<script id="templates/tab-mykalorieq.html" type="text/ng-template">
+ <ion-view title="My KalorieQ">
+   <ion-content class="padding">
+   		<ionic-datepicker date="currentDate" min="minDate" max="maxDate" callback="datePickerCallback">
+			<button class="button button-block button-positive"> {{ currentDate | date:'MMMM/dd/yyyy' }} </button>
+		</ionic-datepicker>
+		
+	
+		 <ion-list>
+			  <ion-item ng-repeat="foodpic in foodpics" ng-click="clickFoodPic(foodpic)">
+			  <img ng-src="data:image/jpeg; base64,{{ foodpic.imagethumb }}">
+			   Id:{{foodpic.kalorieqid}} Descript:{{ foodpic.descript }} Type: {{foodpic.recordtype}}
+			   
+			   {{foodpic.userid}}
+			 </ion-item>
+		 </ion-list>
+		<button  ng-click="takePhoto()" class="button button-block button-positive">New Picture</button>
+   </ion-content>
+ </ion-view>
+</script>  
+
+<script id="templates/tab-kqeditmeal.html" type="text/ng-template">
+<ion-view title="Edit meal">
+	<ion-content ng-controller="kqeditmeal" class="padding">
+
+	<label class="item item-input">
+	  <input ng-model="foodpic.asserted_cals" type="text" placeholder="Your estimate">
+	</label> 
+	
+	<label class="item item-input">
+	  <input ng-model="foodpic.descript" type="text" placeholder="Description">
+	</label>
+	
+	<ionic-datepicker date="currentDate" min="minDate" max="maxDate" callback="consumedDatePickerCallback">
+				<button class="button button-block button-positive"> {{ currentDate | date:'MMMM/dd/yyyy' }} </button>
+	</ionic-datepicker>
+	
+			
+	<button  ng-click="mealSave()" class="button button-block button-positive">Submit</button>	
+		
+
+	 <img style="max-width: 100%;" ng-src="http://www.kalorieq.com/kalorieq.php5?action=getimage&imageid={{foodpic.kalorieqid}}">
+	</ion-content>
+</ion-view>
+</script>
+ 
+ <script id="templates/tab-favorites.html" type="text/ng-template">
+ <ion-view title="Favorites">
+   <ion-content class="padding">
+		
+    <div class="row" ng-repeat="encore in encores" ng-if="$index % 4 === 0">
+        <div style="padding: 1px;" class="col col-25" ng-if="$index < encores.length">
+            <img ng-click="clickToEatAgain(encores[$index])"  ng-src="data:image/jpeg; base64,{{encores[$index].imagethumb}}" width="100%" />
+        </div>
+        <div style="padding: 1px;" class="col col-25" ng-if="$index + 1 < encores.length">
+            <img ng-click="clickToEatAgain(encores[$index + 1])"  ng-src="data:image/jpeg; base64,{{encores[$index + 1].imagethumb}}" width="100%" />
+        </div>
+        <div style="padding: 1px;" class="col col-25" ng-if="$index + 2 < encores.length">
+            <img ng-click="clickToEatAgain(encores[$index + 2])" ng-src="data:image/jpeg; base64,{{encores[$index + 2].imagethumb}}" width="100%" />
+        </div>
+        <div style="padding: 1px;" class="col col-25" ng-if="$index + 3 < encores.length">
+            <img  ng-click="clickToEatAgain(encores[$index + 3])" ng-src="data:image/jpeg; base64,{{encores[$index + 3].imagethumb}}" width="100%" />
+        </div>
+    </div>
+
+<!--
+		<ion-list>
+			  <ion-item ng-repeat="encore in encores" ng-click="clickFoodPic(foodpic)">
+			  <img ng-src="data:image/jpeg; base64,{{ encore.imagethumb }}">
+			   {{ encore.descript }}
+			 </ion-item>
+		 </ion-list>
+		 -->
+		<button  ng-click="takePhoto()" class="button button-block button-positive">New Picture</button>
+   </ion-content>
+ </ion-view>
+</script>  
+
+
+<script id="templates/tab-kqeatagain.html" type="text/ng-template">
+<ion-view title="Eat Again">
+	<ion-content ng-controller="kqeatagain" class="padding">
+
+	<label class="item item-input">
+	  <input ng-model="taggedmeal.portion" type="text" placeholder="Portion">
+	</label> 
+	
+	<label class="item">{{taggedmeal.Description}}</label>
+	 
+	<button ng-click="calculateCalories()" class="button button-block button-positive">Calculate Calories {{taggedmeal.calories}}</button>
+	
+			
+	<button  ng-click="mealSave()" class="button button-block button-positive">Submit</button>	
+		
+
+	 <img style="max-width: 100%;" ng-src="http://www.kalorieq.com/kalorieq.php5?action=getimage&imageid={{taggedmeal.kalorieqid}}">
+	</ion-content>
+</ion-view>
+</script>
+ 
+
+
+
+<script id="templates/tab-chats.html" type="text/ng-template">
+ <ion-view title="Chats">
+   <ion-content class="padding">
+     <h1>Chats</h1>
+   </ion-content>
+ </ion-view>
+</script>  
+
+<script id="templates/tab-account.html" type="text/ng-template">
+ <ion-view title="Account">
+   <ion-content class="padding">
+     <h1>Account</h1>
+   </ion-content>
+ </ion-view>
+</script>
+  </body>
+</html>
